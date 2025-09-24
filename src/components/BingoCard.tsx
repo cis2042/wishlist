@@ -25,6 +25,19 @@ const getRatingColor = (rating: number) => {
   }
 };
 
+const getGlowShadow = (rating: number) => {
+  switch (rating) {
+    case 1:
+      return "0 0 12px 4px rgba(59, 130, 246, 0.6)"; // blue glow
+    case 2:
+      return "0 0 12px 4px rgba(34, 197, 94, 0.6)"; // green glow
+    case 3:
+      return "0 0 12px 4px rgba(234, 179, 8, 0.6)"; // yellow glow
+    default:
+      return "none";
+  }
+};
+
 const getRatingStars = (rating: number) => {
   let filledClass = "fill-white text-white";
   switch (rating) {
@@ -68,10 +81,14 @@ export const BingoCard = ({
         "rounded-xl border-2 animate-fade-in transition-all duration-300",
         getRatingColor(rating),
         rating === 3 ? "text-black" : rating > 0 ? "text-white" : "text-card-foreground",
-        isLocked ? "cursor-not-allowed" : "cursor-pointer",
-        isCompleted && rating > 0 && "animate-pulse shadow-lg shadow-current/50"
+        isLocked ? "cursor-not-allowed" : "cursor-pointer"
       )}
-      style={{ animationDelay: `${animationDelay}ms`, backgroundImage: rating > 0 ? 'none' : undefined }}
+      style={{ 
+        animationDelay: `${animationDelay}ms`, 
+        backgroundImage: rating > 0 ? 'none' : undefined,
+        boxShadow: isCompleted && rating > 0 ? getGlowShadow(rating) : undefined,
+        transition: 'all 0.3s ease-in-out'
+      }}
       onClick={isLocked ? undefined : onClick}
     >
       <div className="flex-1 flex items-center justify-center mb-2">
