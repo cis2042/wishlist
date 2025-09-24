@@ -25,14 +25,26 @@ const getRatingColor = (rating: number) => {
 };
 
 const getRatingStars = (rating: number) => {
+  const getStarColor = (starIndex: number, currentRating: number) => {
+    if (starIndex >= currentRating) {
+      // Unfilled stars - adjust opacity based on background
+      return currentRating === 3 ? "text-black/40" : "text-white/40";
+    }
+    // Filled stars - ensure good contrast
+    switch (currentRating) {
+      case 3: // Yellow background
+        return "fill-black text-black";
+      default: // Purple and Green backgrounds
+        return "fill-white text-white";
+    }
+  };
+
   return Array.from({ length: 3 }, (_, index) => (
     <Star
       key={index}
       className={cn(
         "w-3 h-3 transition-all duration-300",
-        index < rating
-          ? "fill-white text-white"
-          : "text-white/40"
+        getStarColor(index, rating)
       )}
     />
   ));
