@@ -5,6 +5,9 @@ import { BingoGoal, BingoCategory } from "@/data/bingoGoals";
 import { ArrowLeft, RotateCcw, Share2, Trophy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import html2canvas from "html2canvas";
+import { Share } from "@capacitor/share";
+import { Capacitor } from "@capacitor/core";
 
 interface BingoGridProps {
   goals: BingoGoal[];
@@ -39,45 +42,109 @@ export const BingoGrid = ({
   const handleShare = async () => {
     const categoryName = subcategoryName || category.name;
     const shareText = `我在${categoryName}許願BINGO完成了 ${completedCount}/${totalCount} 個目標！`;
-    const shareUrl = window.location.href;
     
-    // Try Instagram sharing first
-    const instagramUrl = `https://www.instagram.com/stories/camera/?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: '許願BINGO',
-          text: shareText,
-          url: shareUrl,
-        });
-      } catch (error) {
-        // Fallback to Instagram or clipboard
+    try {
+      // Capture screenshot of the bingo grid
+      const bingoElement = document.querySelector('.bingo-container') as HTMLElement;
+      if (!bingoElement) {
+        throw new Error('Bingo container not found');
+      }
+
+      toast({
+        title: "正在生成圖片...",
+        description: "請稍候，正在準備分享內容",
+      });
+
+      const canvas = await html2canvas(bingoElement, {
+        backgroundColor: 'transparent',
+        scale: 2, // Higher quality
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      // Convert canvas to blob
+      const imageBlob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob!);
+        }, 'image/png', 0.9);
+      });
+
+      if (Capacitor.isNativePlatform()) {
+        // Convert blob to base64 for native sharing
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64Data = reader.result as string;
+          
+          try {
+            await Share.share({
+              title: '許願BINGO',
+              text: shareText,
+              files: [base64Data],
+              dialogTitle: '分享到 Instagram Stories'
+            });
+          } catch (error) {
+            console.error('Native share failed:', error);
+            toast({
+              title: "分享失敗",
+              description: "無法打開分享選項，請稍後再試",
+            });
+          }
+        };
+        reader.readAsDataURL(imageBlob);
+      } else {
+        // Web fallback - try native web share API with image
+        if (navigator.share && navigator.canShare) {
+          const file = new File([imageBlob], 'bingo-share.png', { type: 'image/png' });
+          
+          if (navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: '許願BINGO',
+                text: shareText,
+                files: [file],
+              });
+              return;
+            } catch (error) {
+              console.log('Web share with image failed, trying fallback');
+            }
+          }
+        }
+        
+        // Final fallback - download image and copy text
+        const url = URL.createObjectURL(imageBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'bingo-share.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        // Copy share text to clipboard
         try {
-          window.open(instagramUrl, '_blank');
-        } catch {
-          navigator.clipboard.writeText(shareUrl);
+          await navigator.clipboard.writeText(shareText);
           toast({
-            title: "連結已複製",
-            description: "分享連結已複製到剪貼簿！",
+            title: "圖片已下載",
+            description: "分享文字已複製到剪貼簿，請手動上傳圖片到 Instagram Stories",
+          });
+        } catch {
+          toast({
+            title: "圖片已下載",
+            description: "請手動分享圖片和文字到 Instagram Stories",
           });
         }
       }
-    } else {
-      try {
-        window.open(instagramUrl, '_blank');
-      } catch {
-        navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "連結已複製",
-          description: "分享連結已複製到剪貼簿！",
-        });
-      }
+    } catch (error) {
+      console.error('Screenshot capture failed:', error);
+      toast({
+        title: "截圖失敗",
+        description: "無法生成分享圖片，請稍後再試",
+      });
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto bingo-container">
       {/* Header */}
       <div className="text-center mb-8 animate-fade-in">
         <Button
