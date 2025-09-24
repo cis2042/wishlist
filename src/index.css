@@ -8,33 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 250 100% 97%;
+    --foreground: 264 100% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 264 100% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 264 100% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 264 84% 70%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 280 100% 85%;
+    --secondary-foreground: 264 100% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 250 40% 96%;
+    --muted-foreground: 264 20% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 290 100% 80%;
+    --accent-foreground: 264 100% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 250 30% 88%;
+    --input: 250 30% 88%;
+    --ring: 264 84% 70%;
+
+    /* Custom bingo colors */
+    --bingo-purple: 264 84% 70%;
+    --bingo-purple-light: 280 100% 85%;
+    --bingo-purple-dark: 264 100% 15%;
+    
+    /* Category colors */
+    --finance: 45 100% 65%;
+    --travel: 264 84% 70%;
+    --lifestyle: 55 100% 70%;
+    --learning: 25 100% 65%;
+    --relationships: 220 100% 70%;
+    
+    /* Gradients */
+    --gradient-main: linear-gradient(135deg, hsl(280 100% 85%), hsl(264 84% 70%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.8), hsl(250 100% 97% / 0.6));
+    --gradient-category: linear-gradient(135deg, hsl(var(--finance)), hsl(var(--finance) / 0.8));
+    
+    /* Shadows */
+    --shadow-card: 0 8px 32px hsl(264 84% 70% / 0.15);
+    --shadow-hover: 0 12px 40px hsl(264 84% 70% / 0.25);
+    --shadow-category: 0 4px 20px hsl(var(--finance) / 0.3);
 
     --radius: 0.5rem;
 
@@ -56,33 +78,39 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 264 100% 8%;
+    --foreground: 250 100% 97%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 264 50% 12%;
+    --card-foreground: 250 100% 97%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 264 50% 12%;
+    --popover-foreground: 250 100% 97%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 280 100% 85%;
+    --primary-foreground: 264 100% 15%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 264 20% 25%;
+    --secondary-foreground: 250 100% 97%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 264 20% 18%;
+    --muted-foreground: 250 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 290 100% 80%;
+    --accent-foreground: 264 100% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 250 100% 97%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 264 20% 25%;
+    --input: 264 20% 25%;
+    --ring: 280 100% 85%;
+
+    /* Dark mode adjustments */
+    --gradient-main: linear-gradient(135deg, hsl(264 50% 20%), hsl(264 84% 15%));
+    --gradient-card: linear-gradient(145deg, hsl(264 30% 15% / 0.8), hsl(264 20% 18% / 0.6));
+    --shadow-card: 0 8px 32px hsl(264 100% 5% / 0.4);
+    --shadow-hover: 0 12px 40px hsl(264 100% 5% / 0.6);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +129,52 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-main);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .bingo-card {
+    @apply bg-card text-card-foreground rounded-xl border border-border/50;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .bingo-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  .bingo-card.completed {
+    @apply bg-primary/20 border-primary;
+    background: linear-gradient(145deg, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.1));
+  }
+  
+  .category-finance {
+    @apply bg-gradient-to-r from-yellow-400 to-orange-400 text-white;
+    box-shadow: 0 4px 20px hsl(45 100% 65% / 0.3);
+  }
+  
+  .category-travel {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 text-white;
+    box-shadow: 0 4px 20px hsl(280 100% 75% / 0.3);
+  }
+  
+  .category-lifestyle {
+    @apply bg-gradient-to-r from-green-400 to-emerald-400 text-white;
+    box-shadow: 0 4px 20px hsl(150 100% 65% / 0.3);
+  }
+  
+  .category-learning {
+    @apply bg-gradient-to-r from-orange-400 to-red-400 text-white;
+    box-shadow: 0 4px 20px hsl(15 100% 65% / 0.3);
+  }
+  
+  .category-relationships {
+    @apply bg-gradient-to-r from-blue-400 to-indigo-400 text-white;
+    box-shadow: 0 4px 20px hsl(220 100% 70% / 0.3);
   }
 }
