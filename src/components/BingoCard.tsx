@@ -63,7 +63,7 @@ export const BingoCard = ({
         isLocked ? "cursor-not-allowed" : "cursor-pointer",
         isCompleted && rating > 0 && "animate-pulse shadow-lg shadow-current/50"
       )}
-      style={{ animationDelay: `${animationDelay}ms`, background: rating > 0 ? 'none' : undefined }}
+      style={{ animationDelay: `${animationDelay}ms`, backgroundImage: rating > 0 ? 'none' : undefined }}
       onClick={isLocked ? undefined : onClick}
     >
       <div className="flex-1 flex items-center justify-center mb-2">
