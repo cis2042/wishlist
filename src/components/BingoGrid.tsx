@@ -6,8 +6,7 @@ import { ArrowLeft, RotateCcw, Share2, Trophy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import html2canvas from "html2canvas";
-import { Share } from "@capacitor/share";
-import { Capacitor } from "@capacitor/core";
+import { shareToInstagramStory } from "@/utils/instagramShare";
 
 interface BingoGridProps {
   goals: BingoGoal[];
@@ -44,101 +43,47 @@ export const BingoGrid = ({
     const shareText = `我在${categoryName}許願BINGO完成了 ${completedCount}/${totalCount} 個目標！`;
     
     try {
+      toast({
+        title: "正在準備分享...",
+        description: "即將打開 Instagram Story",
+      });
+
       // Capture screenshot of the bingo grid
       const bingoElement = document.querySelector('.bingo-container') as HTMLElement;
       if (!bingoElement) {
         throw new Error('Bingo container not found');
       }
 
-      toast({
-        title: "正在生成圖片...",
-        description: "請稍候，正在準備分享內容",
-      });
-
       const canvas = await html2canvas(bingoElement, {
-        backgroundColor: 'transparent',
-        scale: 2, // Higher quality
+        backgroundColor: '#1a1a2e', // Match the app background
+        scale: 2, // Higher quality for mobile
         useCORS: true,
         allowTaint: true,
+        width: bingoElement.offsetWidth,
+        height: bingoElement.offsetHeight,
       });
 
-      // Convert canvas to blob
-      const imageBlob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((blob) => {
-          resolve(blob!);
-        }, 'image/png', 0.9);
-      });
-
-      if (Capacitor.isNativePlatform()) {
-        // Convert blob to base64 for native sharing
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          const base64Data = reader.result as string;
-          
-          try {
-            await Share.share({
-              title: '許願BINGO',
-              text: shareText,
-              files: [base64Data],
-              dialogTitle: '分享到 Instagram Stories'
-            });
-          } catch (error) {
-            console.error('Native share failed:', error);
-            toast({
-              title: "分享失敗",
-              description: "無法打開分享選項，請稍後再試",
-            });
-          }
-        };
-        reader.readAsDataURL(imageBlob);
+      // Try to share directly to Instagram Story
+      const success = await shareToInstagramStory(canvas);
+      
+      if (success) {
+        toast({
+          title: "成功！",
+          description: "已打開 Instagram Story，請完成發布",
+        });
       } else {
-        // Web fallback - try native web share API with image
-        if (navigator.share && navigator.canShare) {
-          const file = new File([imageBlob], 'bingo-share.png', { type: 'image/png' });
-          
-          if (navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({
-                title: '許願BINGO',
-                text: shareText,
-                files: [file],
-              });
-              return;
-            } catch (error) {
-              console.log('Web share with image failed, trying fallback');
-            }
-          }
-        }
-        
-        // Final fallback - download image and copy text
-        const url = URL.createObjectURL(imageBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'bingo-share.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        // Copy share text to clipboard
-        try {
-          await navigator.clipboard.writeText(shareText);
-          toast({
-            title: "圖片已下載",
-            description: "分享文字已複製到剪貼簿，請手動上傳圖片到 Instagram Stories",
-          });
-        } catch {
-          toast({
-            title: "圖片已下載",
-            description: "請手動分享圖片和文字到 Instagram Stories",
-          });
-        }
+        toast({
+          title: "已打開 Instagram",
+          description: "請手動上傳剛下載的圖片到 Story",
+        });
       }
+      
     } catch (error) {
-      console.error('Screenshot capture failed:', error);
+      console.error('Share failed:', error);
       toast({
-        title: "截圖失敗",
-        description: "無法生成分享圖片，請稍後再試",
+        title: "分享失敗",
+        description: "請確保已安裝 Instagram App",
+        variant: "destructive"
       });
     }
   };
