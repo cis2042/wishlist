@@ -11,11 +11,11 @@ interface BingoCardProps {
   isLocked?: boolean;
 }
 
-// 顏色：1星紫、2星綠、3星黃（含邊框色）
+// 顏色：1星藍、2星綠、3星黃（含邊框色）
 const getRatingColor = (rating: number) => {
   switch (rating) {
     case 1:
-      return "bg-purple-500 border-purple-400";
+      return "bg-blue-500 border-blue-400";
     case 2:
       return "bg-green-500 border-green-400";
     case 3:
