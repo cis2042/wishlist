@@ -59,11 +59,11 @@ export const BingoCard = ({
         "flex flex-col items-center justify-center text-center",
         "rounded-xl border-2 animate-fade-in transition-all duration-300",
         getRatingColor(rating),
-        rating > 0 ? "text-white" : "text-card-foreground",
+        rating === 3 ? "text-black" : rating > 0 ? "text-white" : "text-card-foreground",
         isLocked ? "cursor-not-allowed" : "cursor-pointer",
         isCompleted && rating > 0 && "animate-pulse shadow-lg shadow-current/50"
       )}
-      style={{ animationDelay: `${animationDelay}ms` }}
+      style={{ animationDelay: `${animationDelay}ms`, background: rating > 0 ? 'none' : undefined }}
       onClick={isLocked ? undefined : onClick}
     >
       <div className="flex-1 flex items-center justify-center mb-2">
