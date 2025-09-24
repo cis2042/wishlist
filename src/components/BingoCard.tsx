@@ -76,9 +76,10 @@ export const BingoCard = ({
   return (
     <div
       className={cn(
-        "bingo-card relative aspect-square p-3 group",
+        "bingo-card relative w-full aspect-square min-h-0 group",
         "flex flex-col items-center justify-center text-center",
-        "rounded-xl border-2 animate-fade-in transition-all duration-300",
+        "rounded-lg sm:rounded-xl border-2 animate-fade-in transition-all duration-300",
+        "p-2 sm:p-3",
         getRatingColor(rating),
         rating === 3 ? "text-black" : rating > 0 ? "text-white" : "text-card-foreground",
         isLocked ? "cursor-not-allowed" : "cursor-pointer"
@@ -91,10 +92,11 @@ export const BingoCard = ({
       }}
       onClick={isLocked ? undefined : onClick}
     >
-      <div className="flex-1 flex items-center justify-center mb-2">
+      <div className="flex-1 flex items-center justify-center mb-1 sm:mb-2 min-h-0">
         <span
           className={cn(
-            "text-xs font-medium leading-tight transition-all duration-300",
+            "text-[10px] sm:text-xs font-medium leading-tight transition-all duration-300",
+            "break-words hyphens-auto overflow-hidden",
             rating > 0 ? "font-semibold" : undefined
           )}
         >

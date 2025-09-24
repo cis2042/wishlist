@@ -98,7 +98,7 @@ export const BingoGrid = ({
       {/* Bingo Grid */}
       <div 
         className={cn(
-          "grid gap-3 md:gap-4 mb-8 animate-scale-in",
+          "grid gap-2 sm:gap-3 md:gap-4 mb-8 animate-scale-in mx-auto max-w-lg md:max-w-2xl",
           gridSize === 4 && "grid-cols-4",
           gridSize === 5 && "grid-cols-5"
         )}
