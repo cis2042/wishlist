@@ -32,8 +32,16 @@ const Index = () => {
   };
 
   const handleReset = () => {
-    setGoalRatings(new Map());
     const currentBingoKey = getCurrentBingoKey();
+    const goals = getCurrentGoals();
+    
+    // Only clear ratings for goals in the current bingo
+    const newRatings = new Map(goalRatings);
+    goals.forEach(goal => {
+      newRatings.delete(goal.id);
+    });
+    
+    setGoalRatings(newRatings);
     const newCompleted = new Set(completedBingos);
     newCompleted.delete(currentBingoKey);
     setCompletedBingos(newCompleted);

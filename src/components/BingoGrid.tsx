@@ -2,7 +2,7 @@ import { BingoCard } from "@/components/BingoCard";
 import { ProgressBar } from "@/components/ProgressBar";
 import { Button } from "@/components/ui/button";
 import { BingoGoal, BingoCategory } from "@/data/bingoGoals";
-import { ArrowLeft, RotateCcw, Share2 } from "lucide-react";
+import { ArrowLeft, RotateCcw, Share2, Trophy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -131,8 +131,17 @@ export const BingoGrid = ({
           onClick={isCompleted ? onReset : onComplete}
           className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
         >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          {isCompleted ? "重新開始" : "完成賓果"}
+          {isCompleted ? (
+            <>
+              <RotateCcw className="w-4 h-4 mr-2" />
+              重新開始
+            </>
+          ) : (
+            <>
+              <Trophy className="w-4 h-4 mr-2" />
+              完成賓果
+            </>
+          )}
         </Button>
         <Button
           onClick={handleShare}
