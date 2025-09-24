@@ -137,7 +137,7 @@ All colors MUST be HSL.
 @layer utilities {
   .bingo-card {
     @apply bg-card text-card-foreground rounded-xl border border-border/50;
-    background: var(--gradient-card);
+    background-image: var(--gradient-card);
     box-shadow: var(--shadow-card);
     backdrop-filter: blur(10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

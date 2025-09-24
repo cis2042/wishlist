@@ -26,19 +26,27 @@ const getRatingColor = (rating: number) => {
 };
 
 const getRatingStars = (rating: number) => {
-  const getStarColor = (starIndex: number, currentRating: number) => {
-    if (starIndex >= currentRating) {
-      // 未填滿的星：黃色底時用深色，其餘用白色半透明
-      return currentRating === 3 ? "text-black/40" : "text-white/40";
-    }
-    // 已填滿的星：黃色底用黑色，其餘用白色
-    return currentRating === 3 ? "fill-black text-black" : "fill-white text-white";
-  };
+  let filledClass = "fill-white text-white";
+  switch (rating) {
+    case 1:
+      filledClass = "text-blue-500 fill-blue-500";
+      break;
+    case 2:
+      filledClass = "text-green-500 fill-green-500";
+      break;
+    case 3:
+      filledClass = "text-yellow-500 fill-yellow-500";
+      break;
+  }
+  const unfilledClass = rating === 3 ? "text-black/40" : "text-white/50";
 
   return Array.from({ length: 3 }, (_, index) => (
     <Star
       key={index}
-      className={cn("w-3 h-3 transition-all duration-300", getStarColor(index, rating))}
+      className={cn(
+        "w-3 h-3 transition-all duration-300 drop-shadow-[0_0_2px_rgba(0,0,0,0.25)]",
+        index < rating ? filledClass : unfilledClass
+      )}
     />
   ));
 };
