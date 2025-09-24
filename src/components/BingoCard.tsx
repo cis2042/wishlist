@@ -1,53 +1,78 @@
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Star } from "lucide-react";
 
 interface BingoCardProps {
   goal: string;
   category: string;
-  completed: boolean;
+  rating: number; // 0, 1, 2, 3
   onClick: () => void;
   animationDelay?: number;
 }
 
+const getRatingColor = (rating: number) => {
+  switch (rating) {
+    case 1:
+      return "bg-purple-500 border-purple-400";
+    case 2:
+      return "bg-green-500 border-green-400";
+    case 3:
+      return "bg-yellow-500 border-yellow-400";
+    default:
+      return "";
+  }
+};
+
+const getRatingStars = (rating: number) => {
+  return Array.from({ length: 3 }, (_, index) => (
+    <Star
+      key={index}
+      className={cn(
+        "w-3 h-3 transition-all duration-300",
+        index < rating
+          ? "fill-white text-white"
+          : "text-white/40"
+      )}
+    />
+  ));
+};
+
 export const BingoCard = ({ 
   goal, 
   category, 
-  completed, 
+  rating, 
   onClick, 
   animationDelay = 0 
 }: BingoCardProps) => {
   return (
     <div
       className={cn(
-        "bingo-card relative aspect-square p-4 cursor-pointer group",
-        "flex items-center justify-center text-center",
-        "animate-fade-in",
-        completed && "completed animate-pulse-success"
+        "bingo-card relative aspect-square p-3 cursor-pointer group",
+        "flex flex-col items-center justify-center text-center",
+        "animate-fade-in transition-all duration-300",
+        rating > 0 && getRatingColor(rating)
       )}
       style={{ animationDelay: `${animationDelay}ms` }}
       onClick={onClick}
     >
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center mb-2">
         <span className={cn(
-          "text-sm font-medium leading-tight transition-all duration-300",
-          completed ? "text-primary font-semibold" : "text-card-foreground"
+          "text-xs font-medium leading-tight transition-all duration-300",
+          rating > 0 ? "text-white font-semibold" : "text-card-foreground"
         )}>
           {goal}
         </span>
-        
-        {completed && (
-          <div className="absolute inset-0 flex items-center justify-center bg-primary/10 rounded-lg animate-bounce-in">
-            <div className="bg-primary rounded-full p-1.5 shadow-lg">
-              <Check className="w-4 h-4 text-primary-foreground" />
-            </div>
-          </div>
-        )}
-        
-        <div className={cn(
-          "absolute inset-0 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100",
-          "bg-gradient-to-br from-primary/5 to-accent/5"
-        )} />
       </div>
+      
+      {rating > 0 && (
+        <div className="flex gap-0.5">
+          {getRatingStars(rating)}
+        </div>
+      )}
+      
+      <div className={cn(
+        "absolute inset-0 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100",
+        "bg-gradient-to-br from-primary/5 to-accent/5"
+      )} />
     </div>
   );
 };
