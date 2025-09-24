@@ -15,6 +15,8 @@ interface BingoGridProps {
   category: BingoCategory;
   subcategoryName?: string;
   gridSize: number;
+  isCompleted: boolean;
+  onComplete: () => void;
 }
 
 export const BingoGrid = ({
@@ -26,6 +28,8 @@ export const BingoGrid = ({
   category,
   subcategoryName,
   gridSize,
+  isCompleted,
+  onComplete,
 }: BingoGridProps) => {
   const { toast } = useToast();
   
@@ -34,22 +38,41 @@ export const BingoGrid = ({
 
   const handleShare = async () => {
     const categoryName = subcategoryName || category.name;
+    const shareText = `我在${categoryName}許願BINGO完成了 ${completedCount}/${totalCount} 個目標！`;
+    const shareUrl = window.location.href;
+    
+    // Try Instagram sharing first
+    const instagramUrl = `https://www.instagram.com/stories/camera/?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    
     if (navigator.share) {
       try {
         await navigator.share({
           title: '許願BINGO',
-          text: `我在${categoryName}許願BINGO完成了 ${completedCount}/${totalCount} 個目標！`,
-          url: window.location.href,
+          text: shareText,
+          url: shareUrl,
         });
       } catch (error) {
-        console.log('分享取消');
+        // Fallback to Instagram or clipboard
+        try {
+          window.open(instagramUrl, '_blank');
+        } catch {
+          navigator.clipboard.writeText(shareUrl);
+          toast({
+            title: "連結已複製",
+            description: "分享連結已複製到剪貼簿！",
+          });
+        }
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "連結已複製",
-        description: "分享連結已複製到剪貼簿！",
-      });
+      try {
+        window.open(instagramUrl, '_blank');
+      } catch {
+        navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "連結已複製",
+          description: "分享連結已複製到剪貼簿！",
+        });
+      }
     }
   };
 
@@ -70,12 +93,6 @@ export const BingoGrid = ({
           <span className="text-3xl">{category.icon}</span>
           {subcategoryName || category.name}
         </h1>
-        
-        <ProgressBar 
-          progress={completedCount} 
-          total={totalCount}
-          className="max-w-md mx-auto mb-6"
-        />
       </div>
 
       {/* Bingo Grid */}
@@ -100,6 +117,8 @@ export const BingoGrid = ({
               rating={ratings.get(goal.id) || 0}
               onClick={() => onGoalClick(goal.id)}
               animationDelay={index * 50}
+              isCompleted={isCompleted}
+              isLocked={isCompleted}
             />
           );
         })}
@@ -109,11 +128,11 @@ export const BingoGrid = ({
       <div className="flex gap-3 justify-center animate-fade-in" style={{ animationDelay: '500ms' }}>
         <Button
           variant="secondary"
-          onClick={onReset}
+          onClick={isCompleted ? onReset : onComplete}
           className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
         >
           <RotateCcw className="w-4 h-4 mr-2" />
-          重新開始
+          {isCompleted ? "重新開始" : "完成賓果"}
         </Button>
         <Button
           onClick={handleShare}

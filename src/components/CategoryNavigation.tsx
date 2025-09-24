@@ -10,6 +10,7 @@ interface CategoryNavigationProps {
   onCategorySelect: (categoryId: string) => void;
   onSubcategorySelect: (subcategoryId: string) => void;
   onBack: () => void;
+  completionStatus: Map<string, { completed: number; total: number }>;
 }
 
 export const CategoryNavigation = ({
@@ -19,6 +20,7 @@ export const CategoryNavigation = ({
   onCategorySelect,
   onSubcategorySelect,
   onBack,
+  completionStatus,
 }: CategoryNavigationProps) => {
   // 主類別選擇畫面
   if (!selectedCategory) {
@@ -42,9 +44,8 @@ export const CategoryNavigation = ({
             >
               <span className="text-4xl">{category.icon}</span>
               <span>{category.name}</span>
-              <span className="text-sm opacity-80">
-                {category.gridSize}×{category.gridSize}
-                {category.subcategories && ` (${category.subcategories.length}個子類別)`}
+              <span className="text-xs font-medium text-white/70">
+                {completionStatus.get(category.id)?.completed || 0}/{completionStatus.get(category.id)?.total || (category.subcategories?.length || 1)}
               </span>
             </button>
           ))}
@@ -88,8 +89,8 @@ export const CategoryNavigation = ({
               onClick={() => onSubcategorySelect(subcategory.id)}
             >
               <span>{subcategory.name}</span>
-              <span className="text-sm opacity-80">
-                {subcategory.gridSize}×{subcategory.gridSize}
+              <span className="text-xs font-medium text-white/70">
+                {completionStatus.get(`${selectedCategory}-${subcategory.id}`)?.completed || 0}/1
               </span>
             </button>
           ))}

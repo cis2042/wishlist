@@ -7,6 +7,8 @@ interface BingoCardProps {
   rating: number; // 0, 1, 2, 3
   onClick: () => void;
   animationDelay?: number;
+  isCompleted?: boolean;
+  isLocked?: boolean;
 }
 
 const getRatingColor = (rating: number) => {
@@ -41,18 +43,22 @@ export const BingoCard = ({
   category, 
   rating, 
   onClick, 
-  animationDelay = 0 
+  animationDelay = 0,
+  isCompleted = false,
+  isLocked = false
 }: BingoCardProps) => {
   return (
     <div
       className={cn(
-        "bingo-card relative aspect-square p-3 cursor-pointer group",
+        "bingo-card relative aspect-square p-3 group",
         "flex flex-col items-center justify-center text-center",
         "animate-fade-in transition-all duration-300",
-        rating > 0 && getRatingColor(rating)
+        rating > 0 && getRatingColor(rating),
+        isLocked ? "cursor-not-allowed" : "cursor-pointer",
+        isCompleted && rating > 0 && "animate-pulse shadow-lg shadow-current/50"
       )}
       style={{ animationDelay: `${animationDelay}ms` }}
-      onClick={onClick}
+      onClick={isLocked ? undefined : onClick}
     >
       <div className="flex-1 flex items-center justify-center mb-2">
         <span className={cn(

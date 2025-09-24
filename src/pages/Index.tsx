@@ -8,6 +8,7 @@ const Index = () => {
   const [goalRatings, setGoalRatings] = useState<Map<string, number>>(new Map());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  const [completedBingos, setCompletedBingos] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const handleGoalClick = (goalId: string) => {
@@ -32,10 +33,30 @@ const Index = () => {
 
   const handleReset = () => {
     setGoalRatings(new Map());
+    const currentBingoKey = getCurrentBingoKey();
+    const newCompleted = new Set(completedBingos);
+    newCompleted.delete(currentBingoKey);
+    setCompletedBingos(newCompleted);
     toast({
       title: "重置完成",
       description: "所有目標已重置，重新開始吧！",
     });
+  };
+
+  const handleComplete = () => {
+    const currentBingoKey = getCurrentBingoKey();
+    const newCompleted = new Set(completedBingos);
+    newCompleted.add(currentBingoKey);
+    setCompletedBingos(newCompleted);
+    toast({
+      title: "賓果完成！",
+      description: "恭喜完成這個賓果卡！",
+    });
+  };
+
+  const getCurrentBingoKey = () => {
+    if (!selectedCategory) return '';
+    return selectedSubcategory ? `${selectedCategory}-${selectedSubcategory}` : selectedCategory;
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -78,6 +99,28 @@ const Index = () => {
     return subcategory?.name;
   };
 
+  const getCompletionStatus = () => {
+    const status = new Map<string, { completed: number; total: number }>();
+    
+    categories.forEach(category => {
+      if (category.subcategories) {
+        let completedSubs = 0;
+        category.subcategories.forEach(sub => {
+          const subKey = `${category.id}-${sub.id}`;
+          const isCompleted = completedBingos.has(subKey);
+          status.set(subKey, { completed: isCompleted ? 1 : 0, total: 1 });
+          if (isCompleted) completedSubs++;
+        });
+        status.set(category.id, { completed: completedSubs, total: category.subcategories.length });
+      } else {
+        const isCompleted = completedBingos.has(category.id);
+        status.set(category.id, { completed: isCompleted ? 1 : 0, total: 1 });
+      }
+    });
+    
+    return status;
+  };
+
   return (
     <div className="min-h-screen p-4">
       {/* Floating decorative elements */}
@@ -94,6 +137,7 @@ const Index = () => {
           onCategorySelect={handleCategorySelect}
           onSubcategorySelect={handleSubcategorySelect}
           onBack={handleBack}
+          completionStatus={getCompletionStatus()}
         />
       ) : (
         currentCategory && (
@@ -106,6 +150,8 @@ const Index = () => {
             category={currentCategory}
             subcategoryName={getCurrentSubcategoryName()}
             gridSize={getCurrentGridSize()}
+            isCompleted={completedBingos.has(getCurrentBingoKey())}
+            onComplete={handleComplete}
           />
         )
       )}
