@@ -84,6 +84,11 @@ const Index = () => {
     }
   };
 
+  const handleBackToHome = () => {
+    setSelectedCategory(null);
+    setSelectedSubcategory(null);
+  };
+
   const currentCategory = selectedCategory ? categories.find(c => c.id === selectedCategory) : null;
   const isShowingGrid = selectedCategory && (!currentCategory?.subcategories || selectedSubcategory);
 
@@ -155,6 +160,7 @@ const Index = () => {
             onGoalClick={handleGoalClick}
             onReset={handleReset}
             onBack={handleBack}
+            onBackToHome={handleBackToHome}
             category={currentCategory}
             subcategoryName={getCurrentSubcategoryName()}
             gridSize={getCurrentGridSize()}

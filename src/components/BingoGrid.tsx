@@ -14,6 +14,7 @@ interface BingoGridProps {
   onGoalClick: (goalId: string) => void;
   onReset: () => void;
   onBack: () => void;
+  onBackToHome: () => void;
   category: BingoCategory;
   subcategoryName?: string;
   gridSize: number;
@@ -27,6 +28,7 @@ export const BingoGrid = ({
   onGoalClick,
   onReset,
   onBack,
+  onBackToHome,
   category,
   subcategoryName,
   gridSize,
@@ -154,6 +156,12 @@ export const BingoGrid = ({
               完成賓果
             </>
           )}
+        </Button>
+        <Button
+          onClick={onBackToHome}
+          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
+        >
+          再玩一張BINGO
         </Button>
         <Button
           onClick={handleShare}
