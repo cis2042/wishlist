@@ -139,11 +139,11 @@ export const BingoGrid = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 justify-center animate-fade-in" style={{ animationDelay: '500ms' }}>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center animate-fade-in px-4" style={{ animationDelay: '500ms' }}>
         <Button
           variant="secondary"
           onClick={isCompleted ? onReset : onComplete}
-          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
+          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
         >
           {isCompleted ? (
             <>
@@ -159,13 +159,13 @@ export const BingoGrid = ({
         </Button>
         <Button
           onClick={onBackToHome}
-          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
+          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
         >
           再玩一張BINGO
         </Button>
         <Button
           onClick={handleShare}
-          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 hover:from-blue-600 hover:to-purple-600 shadow-lg"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 hover:from-blue-600 hover:to-purple-600 shadow-lg text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
         >
           <Share2 className="w-4 h-4 mr-2" />
           分享
