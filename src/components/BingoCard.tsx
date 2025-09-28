@@ -39,18 +39,7 @@ const getGlowShadow = (rating: number) => {
 };
 
 const getRatingStars = (rating: number) => {
-  let filledClass = "fill-white text-white";
-  switch (rating) {
-    case 1:
-      filledClass = "text-blue-500 fill-blue-500";
-      break;
-    case 2:
-      filledClass = "text-green-500 fill-green-500";
-      break;
-    case 3:
-      filledClass = "text-yellow-500 fill-yellow-500";
-      break;
-  }
+  const filledClass = "fill-white text-white";
   const unfilledClass = rating === 3 ? "text-black/40" : "text-white/50";
 
   return Array.from({ length: 3 }, (_, index) => (
@@ -95,7 +84,7 @@ export const BingoCard = ({
       <div className="flex-1 flex items-center justify-center mb-1 sm:mb-2 min-h-0">
         <span
           className={cn(
-            "text-[10px] sm:text-xs font-medium leading-tight transition-all duration-300",
+            "text-xs sm:text-sm font-medium leading-tight transition-all duration-300",
             "break-words hyphens-auto overflow-hidden",
             rating > 0 ? "font-semibold" : undefined
           )}
