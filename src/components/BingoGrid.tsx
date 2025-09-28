@@ -91,18 +91,9 @@ export const BingoGrid = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto bingo-container">
+    <div className="max-w-4xl mx-auto bingo-container relative">
       {/* Header */}
       <div className="text-center mb-8 animate-fade-in">
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="text-white hover:bg-white/20 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          返回
-        </Button>
-        
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg flex items-center justify-center gap-3">
           <span className="text-3xl">{category.icon}</span>
           {subcategoryName || category.name}
@@ -139,38 +130,57 @@ export const BingoGrid = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center animate-fade-in px-4" style={{ animationDelay: '500ms' }}>
-        <Button
-          variant="secondary"
-          onClick={isCompleted ? onReset : onComplete}
-          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
-        >
-          {isCompleted ? (
-            <>
-              <RotateCcw className="w-4 h-4 mr-2" />
-              重新開始
-            </>
-          ) : (
-            <>
-              <Trophy className="w-4 h-4 mr-2" />
-              完成賓果
-            </>
-          )}
-        </Button>
-        <Button
-          onClick={onBackToHome}
-          className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
-        >
-          再玩一張BINGO
-        </Button>
+      <div className="flex flex-col gap-2 sm:gap-3 justify-center animate-fade-in px-4" style={{ animationDelay: '500ms' }}>
+        {/* First row: Complete/Reset and Play Again buttons (side by side on mobile) */}
+        <div className="flex gap-2 sm:gap-3">
+          <Button
+            variant="secondary"
+            onClick={isCompleted ? onReset : onComplete}
+            className={cn(
+              "text-sm sm:text-base min-h-[44px] flex-1 backdrop-blur-sm",
+              isCompleted 
+                ? "bg-white/20 text-white border-white/30 hover:bg-white/30" 
+                : "bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 hover:from-yellow-600 hover:to-orange-600 shadow-lg"
+            )}
+          >
+            {isCompleted ? (
+              <>
+                <RotateCcw className="w-4 h-4 mr-2" />
+                重新開始
+              </>
+            ) : (
+              <>
+                <Trophy className="w-4 h-4 mr-2" />
+                完成賓果
+              </>
+            )}
+          </Button>
+          <Button
+            onClick={onBackToHome}
+            className="bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm text-sm sm:text-base min-h-[44px] flex-1"
+          >
+            再玩一張BINGO
+          </Button>
+        </div>
+        
+        {/* Second row: Share button (full width) */}
         <Button
           onClick={handleShare}
-          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 hover:from-blue-600 hover:to-purple-600 shadow-lg text-sm sm:text-base min-h-[44px] flex-1 sm:flex-none"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 hover:from-blue-600 hover:to-purple-600 shadow-lg text-sm sm:text-base min-h-[44px] w-full"
         >
           <Share2 className="w-4 h-4 mr-2" />
           分享
         </Button>
       </div>
+
+      {/* Back Button - Bottom Right */}
+      <Button
+        variant="ghost"
+        onClick={onBack}
+        className="fixed bottom-4 right-4 z-10 bg-black/20 text-white hover:bg-black/40 backdrop-blur-sm border border-white/20 rounded-full w-12 h-12 p-0"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </Button>
     </div>
   );
 };
