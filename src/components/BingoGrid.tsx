@@ -171,6 +171,11 @@ export const BingoGrid = ({
           <Share2 className="w-4 h-4 mr-2" />
           分享
         </Button>
+        
+        {/* Powered by text */}
+        <div className="text-center mt-2">
+          <span className="text-white/60 text-xs">Powered by Zoo Financial</span>
+        </div>
       </div>
 
       {/* Back Button - Bottom Right */}
